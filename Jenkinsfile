@@ -4,13 +4,17 @@ node {
         checkout scm
     }
     stage('Build image') {
-       app = docker.build("katerinasmilevska/kiii-jenkins")
+         if (env.BRANCH_NAME == 'main') {
+             app = docker.build("katerinasmilevska/kiii-jenkins")
+         }
     }
-    stage('Push image') {   
-        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+    stage('Push image') {  
+        if (env.BRANCH_NAME == 'main') {
+            docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
             app.push("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
             app.push("${env.BRANCH_NAME}-latest")
             // signal the orchestrator that there is a new version
+          } 
         }
     }
 }
