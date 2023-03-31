@@ -4,12 +4,12 @@ node {
         checkout scm
     }
     stage('Build image') {
-         if (env.BRANCH_NAME == 'main') {
+         if (env.BRANCH_NAME == 'dev') {
              app = docker.build("katerinasmilevska/kiii-jenkins")
          }
     }
     stage('Push image') {  
-        if (env.BRANCH_NAME == 'main') {
+        if (env.BRANCH_NAME == 'dev') {
             docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
             app.push("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
             app.push("${env.BRANCH_NAME}-latest")
